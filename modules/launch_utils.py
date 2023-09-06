@@ -408,6 +408,10 @@ def prepare_environment():
             task.join()
 
         task_install_webui_requirements()
+
+        ddimpy_path = 'repositories/stable-diffusion-stability-ai/ldm/models/diffusion/ddim.py'
+        os.system('perl -pi -e "s/print\(f\'Data shape/#/g" ' + ddimpy_path)
+        os.system('perl -pi -e "s/print\(f\\"Running DDIM/#/g" ' + ddimpy_path)
     except RuntimeError:
         print('похуй')
     except Exception as e:
