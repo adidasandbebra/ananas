@@ -413,7 +413,7 @@ def prepare_environment():
         os.system('perl -pi -e "s/print\(f\'Data shape/#/g" ' + ddimpy_path)
         os.system('perl -pi -e "s/print\(f\\"Running DDIM/#/g" ' + ddimpy_path)
     except RuntimeError:
-        print('похуй')
+        pass
     except Exception as e:
         print(e)
 
