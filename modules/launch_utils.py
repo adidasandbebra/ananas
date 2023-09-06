@@ -8,6 +8,7 @@ import sys
 import importlib.util
 import platform
 import json
+import threading
 from functools import lru_cache
 
 from modules import cmd_args, errors
@@ -348,68 +349,82 @@ def prepare_environment():
     print(f"Version: {tag}")
     print(f"Commit hash: {commit}")
 
-    if args.reinstall_torch or not is_installed("torch") or not is_installed("torchvision"):
-        run(f'"{python}" -m {torch_command}', "Installing torch and torchvision", "Couldn't install torch", live=True)
-        startup_timer.record("install torch")
+    os.makedirs(dir_repos, exist_ok=True)
 
-    if not args.skip_torch_cuda_test and not check_run_python("import torch; assert torch.cuda.is_available()"):
-        raise RuntimeError(
-            'Torch is not able to use GPU; '
-            'add --skip-torch-cuda-test to COMMANDLINE_ARGS variable to disable this check'
-        )
-    startup_timer.record("torch GPU test")
+    import platform
+    is_windows = platform.system() == 'Windows'
 
-    if not is_installed("clip"):
-        run_pip(f"install {clip_package}", "clip")
-        startup_timer.record("install clip")
+    if is_windows:
+        from pathlib import Path
+        temp_dir = Path.home() + '\\AppData\\Local\\Temp\\gradio'
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
 
-    if not is_installed("open_clip"):
-        run_pip(f"install {openclip_package}", "open_clip")
-        startup_timer.record("install open_clip")
+    elif not os.path.exists('/tmp/gradio'):
+        os.makedirs('/tmp/gradio')
 
-    if (not is_installed("xformers") or args.reinstall_xformers) and args.xformers:
-        run_pip(f"install -U -I --no-deps {xformers_package}", "xformers")
-        startup_timer.record("install xformers")
+    def task_install_gfpgan():
+        if not is_installed("gfpgan"):
+            run_pip(f"install {gfpgan_package}", "gfpgan")
 
-    if not is_installed("ngrok") and args.ngrok:
-        run_pip("install ngrok", "ngrok")
-        startup_timer.record("install ngrok")
+    def task_install_clip():
+        if not is_installed("clip"):
+            run_pip(f"install {clip_package}", "clip")
 
-    os.makedirs(os.path.join(script_path, dir_repos), exist_ok=True)
+    def task_install_open_clip():
+        if not is_installed("open_clip"):
+            run_pip(f"install {openclip_package}", "open_clip")
 
-    git_clone(stable_diffusion_repo, repo_dir('stable-diffusion-stability-ai'), "Stable Diffusion", stable_diffusion_commit_hash)
-    git_clone(stable_diffusion_xl_repo, repo_dir('generative-models'), "Stable Diffusion XL", stable_diffusion_xl_commit_hash)
-    git_clone(k_diffusion_repo, repo_dir('k-diffusion'), "K-diffusion", k_diffusion_commit_hash)
-    git_clone(codeformer_repo, repo_dir('CodeFormer'), "CodeFormer", codeformer_commit_hash)
-    git_clone(blip_repo, repo_dir('BLIP'), "BLIP", blip_commit_hash)
+    def task_clone_stable_diffusion_repo():
+        git_clone(stable_diffusion_repo, repo_dir('stable-diffusion-stability-ai'), "Stable Diffusion",
+                  stable_diffusion_commit_hash)
 
-    startup_timer.record("clone repositores")
+    def task_clone_repos():
+        git_clone(taming_transformers_repo, repo_dir('taming-transformers'), "Taming Transformers",
+                  taming_transformers_commit_hash)
+        git_clone(k_diffusion_repo, repo_dir('k-diffusion'), "K-diffusion", k_diffusion_commit_hash)
+        git_clone(blip_repo, repo_dir('BLIP'), "BLIP", blip_commit_hash)
 
-    if not is_installed("lpips"):
-        run_pip(f"install -r \"{os.path.join(repo_dir('CodeFormer'), 'requirements.txt')}\"", "requirements for CodeFormer")
-        startup_timer.record("install CodeFormer requirements")
+    def task_install_codeformer_requirements():
+        git_clone(codeformer_repo, repo_dir('CodeFormer'), "CodeFormer", codeformer_commit_hash)
+        if not is_installed("lpips"):
+            run_pip(f"install -r {os.path.join(repo_dir('CodeFormer'), 'requirements.txt')}",
+                    "requirements for CodeFormer")
 
-    if not os.path.isfile(requirements_file):
-        requirements_file = os.path.join(script_path, requirements_file)
+    def task_install_webui_requirements():
+        run_pip(f"install -r {requirements_file}", "requirements for Web UI")
 
-    if not requirements_met(requirements_file):
-        run_pip(f"install -r \"{requirements_file}\"", "requirements")
-        startup_timer.record("install requirements")
+    def task_download_lora():
+        import subprocess
+        subprocess.run(
+            'git lfs install && git clone --depth 1 --jobs 3 https://huggingface.co/bebraadidas228/Lora /content/sd/models/Lora --quiet > /dev/null',
+            shell=True)
 
-    if not args.skip_install:
-        run_extensions_installers(settings_file=args.ui_settings_file)
+    try:
+        tasks = [
+            task_install_gfpgan,
+            task_install_clip,
+            task_install_open_clip,
+            task_clone_stable_diffusion_repo,
+            task_clone_repos,
+            task_install_codeformer_requirements,
+            task_download_lora
+        ]
 
-    if args.update_check:
-        version_check(commit)
-        startup_timer.record("check version")
+        t = []
+        for task in tasks:
+            task = threading.Thread(target=task)
+            task.start()
+            t.append(task)
 
-    if args.update_all_extensions:
-        git_pull_recursive(extensions_dir)
-        startup_timer.record("update extensions")
+        for task in t:
+            task.join()
 
-    if "--exit" in sys.argv:
-        print("Exiting because of --exit argument")
-        exit(0)
+        task_install_webui_requirements()
+    except RuntimeError:
+        print('похуй')
+    except Exception as e:
+        print(e)
 
 
 
