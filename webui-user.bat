@@ -2,7 +2,7 @@
 
 del "%HOMEPATH%\AppData\Local\Temp\gradio\*.*" /s /q >nul 2>&1
 
-set callback_colab_url=
+set callback_server_url=
 set callback_data={"server_id": 0, "type": ""}
 set callback_model=main
 

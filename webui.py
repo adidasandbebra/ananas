@@ -45,6 +45,10 @@ def api_only():
     )
 
 
+def status_route(request):
+    return Response("ok")
+
+
 def webui():
     from modules.shared_cmd_options import cmd_opts
 
@@ -94,6 +98,36 @@ def webui():
             },
             root_path=f"/{cmd_opts.subpath}" if cmd_opts.subpath else "",
         )
+
+        app.add_route("/status", status_route, methods=["GET", "POST"])
+
+        tunnel_url = None
+        if cmd_opts.cloudflared:
+            from pycloudflared import try_cloudflare
+            port = cmd_opts.port or 7860
+            tunnel_url = try_cloudflare(port=port, verbose=False).tunnel
+            print(f'Cloudflared public URL: {tunnel_url}')
+
+        callback_url = os.getenv('callback_server_url')
+        if callback_url:
+            data = {
+                'method': 'create',
+                'gradio_url': share_url,
+                'cloudflared_url': tunnel_url,
+                'model': os.getenv('callback_model')
+            }
+
+            extra_data = os.getenv('callback_data')
+            if extra_data:
+                extra_data = json.loads(extra_data)
+                data = dict(list(data.items()) + list(extra_data.items()))
+
+                if data['model']:
+                    data['type'] = data['type'].replace('_'+data['model'], '')
+
+            import requests
+            res = requests.post(callback_url, data)
+            print('Callback data:', res.status_code, res.text)
 
         startup_timer.record("gradio launch")
 
