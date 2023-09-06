@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import time
+import json
 
 from modules import timer
 from modules import initialize_util
@@ -122,7 +123,7 @@ def webui():
                 extra_data = json.loads(extra_data)
                 data = dict(list(data.items()) + list(extra_data.items()))
 
-                if data['model']:
+                if 'model' in data and 'type' in data:
                     data['type'] = data['type'].replace('_'+data['model'], '')
 
             import requests
