@@ -352,7 +352,7 @@ def prepare_environment():
 
     if is_windows:
         from pathlib import Path
-        temp_dir = Path.home() + '\\AppData\\Local\\Temp\\gradio'
+        temp_dir = str(Path.home()) + '\\AppData\\Local\\Temp\\gradio'
         if not os.path.exists(temp_dir):
             os.makedirs(temp_dir)
 
