@@ -11,5 +11,6 @@ set PYTORCH_CUDA_ALLOC_CONF=garbage_collection_threshold:0.9,max_split_size_mb:5
 set PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 set CUDA_MODULE_LOADING=LAZY
 
+pip install "accelerate==0.21.0" >nul
 "C:\Program Files\Python310\Scripts\accelerate.exe" launch --num_cpu_threads_per_process=6 launch.py
 pause
