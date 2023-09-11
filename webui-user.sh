@@ -12,5 +12,8 @@ export CUDA_MODULE_LOADING=LAZY
 TCMALLOC="$(PATH=/usr/sbin:$PATH ldconfig -p | grep -Po "libtcmalloc(_minimal|)\.so\.\d" | head -n 1)"
 export LD_PRELOAD="${TCMALLOC}"
 
-pip install "accelerate==0.21.0" > /dev/null
-accelerate launch --num_cpu_threads_per_process=6 launch.py
+if [ -x "$(command -v accelerate)" ]; then
+  accelerate launch --num_cpu_threads_per_process=6 launch.py
+else
+  python launch.py
+fi
