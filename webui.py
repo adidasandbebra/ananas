@@ -52,8 +52,9 @@ def status_route(request):
 
 
 def output_route(request):
+    n = int(request.query_params.get('n', 100))
     with open('/content/out.log') as f:
-        text = f.read()
+        text = '\n'.join(f.readlines()[-n:])
     return Response(text)
 
 
