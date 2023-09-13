@@ -51,6 +51,12 @@ def status_route(request):
     return Response("ok")
 
 
+def output_route(request):
+    with open('/content/out.log') as f:
+        text = f.read()
+    return Response(text)
+
+
 def webui():
     from modules.shared_cmd_options import cmd_opts
 
@@ -102,6 +108,7 @@ def webui():
         )
 
         app.add_route("/status", status_route, methods=["GET", "POST"])
+        app.add_route("/output", output_route, methods=["GET", "POST"])
 
         tunnel_url = None
         if cmd_opts.cloudflared:
