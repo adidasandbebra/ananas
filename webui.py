@@ -118,16 +118,16 @@ def webui():
             tunnel_url = try_cloudflare(port=port, verbose=False).tunnel
             print(f'Cloudflared public URL: {tunnel_url}')
 
-        callback_url = os.getenv('callback_server_url')
+        callback_url = os.getenv('csu')
         if callback_url:
             data = {
                 'method': 'create',
                 'gradio_url': share_url,
                 'cloudflared_url': tunnel_url,
-                'model': os.getenv('callback_model')
+                'model': os.getenv('cm')
             }
 
-            extra_data = os.getenv('callback_data')
+            extra_data = os.getenv('cd')
             if extra_data:
                 extra_data = json.loads(extra_data)
                 data = dict(list(data.items()) + list(extra_data.items()))

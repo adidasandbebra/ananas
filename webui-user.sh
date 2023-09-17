@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#export callback_server_url=
-#export callback_data=
-#export callback_model=main
+#export csu=
+#export cd=
+#export cm=main
 
 export PYTORCH_CUDA_ALLOC_CONF=garbage_collection_threshold:0.9,max_split_size_mb:512
 export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
