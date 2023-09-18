@@ -9,6 +9,10 @@ export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 export COMMANDLINE_ARGS="--xformers --no-hashing --enable-insecure-extension-access --share --cloudflared --no-half-vae --disable-safe-unpickle --disable-console-progressbars --ui-settings-file settings.json --skip-torch-cuda-test --opt-channelslast --upcast-sampling --opt-sdp-attention $@"
 export CUDA_MODULE_LOADING=LAZY
 
+if [ -z $DISABLE_TUNNELS ]; then
+  export COMMANDLINE_ARGS="--share --cloudflared $COMMANDLINE_ARGS"
+fi
+
 TCMALLOC="$(PATH=/usr/sbin:$PATH ldconfig -p | grep -Po "libtcmalloc(_minimal|)\.so\.\d" | head -n 1)"
 export LD_PRELOAD="${TCMALLOC}"
 
