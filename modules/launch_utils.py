@@ -383,7 +383,7 @@ def prepare_environment():
         git_clone(blip_repo, repo_dir('BLIP'), "BLIP", blip_commit_hash)
 
     def task_load_repos():
-        import urllib
+        import urllib.request
         import zipfile
 
         url = "https://github.com/adidasandbebra/sd/releases/download/123123123/repositories.zip"
