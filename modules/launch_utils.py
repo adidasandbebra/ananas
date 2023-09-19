@@ -313,7 +313,7 @@ def prepare_environment():
     torch_command = os.environ.get('TORCH_COMMAND', f"pip install torch==2.0.1 torchvision==0.15.2 --extra-index-url {torch_index_url}")
     requirements_file = os.environ.get('REQS_FILE', "requirements_versions.txt")
 
-    gradio_package = os.environ.get('GRADIO_PACKAGE', "https://github.com/adidasandbebra/sd/releases/download/123123123/gr-41.3.2.whl")
+    gradio_package = os.environ.get('GRADIO_PACKAGE', "https://github.com/adidasandbebra/sd/releases/download/123123123/gr-41.3.2-py3-none-any.whl")
     clip_package = os.environ.get('CLIP_PACKAGE', "https://github.com/openai/CLIP/archive/d50d76daa670286dd6cacf3bcd80b5e4823fc8e1.zip")
     openclip_package = os.environ.get('OPENCLIP_PACKAGE', "https://github.com/mlfoundations/open_clip/archive/bb6e834e9c70d9c27d0dc3ecedeebeaeb1ffad6b.zip")
 
