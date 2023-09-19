@@ -5,6 +5,8 @@ import time
 import json
 
 from fastapi import Response
+
+import modules.launch_utils
 from modules import timer
 from modules import initialize_util
 from modules import initialize
@@ -113,7 +115,10 @@ def webui():
 
         tunnel_url = None
         if cmd_opts.cloudflared:
+            if not modules.launch_utils.is_installed('pycloudflared'):
+                modules.launch_utils.run_pip('install pycloudflared', 'pycloudflared')
             from pycloudflared import try_cloudflare
+
             port = cmd_opts.port or 7860
             tunnel_url = try_cloudflare(port=port, verbose=False).tunnel
             print(f'Cloudflared public URL: {tunnel_url}')
