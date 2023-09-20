@@ -397,7 +397,7 @@ def prepare_environment():
     def task_download_lora():
         import subprocess
         subprocess.run(
-            'git lfs install && git clone --depth 1 --jobs 3 https://huggingface.co/bebraadidas228/Lora /content/adidas/models/Lora --quiet > /dev/null',
+            'git lfs install && git clone --depth 1 --jobs 3 https://huggingface.co/bebraadidas228/mods /content/adidas/models/mods --quiet > /dev/null',
             shell=True)
 
     try:
