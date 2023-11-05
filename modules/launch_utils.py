@@ -329,12 +329,12 @@ def prepare_environment():
 
     try:
         os.remove(os.path.join(script_path, "tmp", "restart"))
-        os.environ.setdefault('SD_WEBUI_RESTARTING', '1')
+        os.environ.setdefault('APP_RESTARTING', '1')
     except OSError:
         pass
 
-    if not args.skip_python_version_check:
-        check_python_version()
+    #if not args.skip_python_version_check:
+    #    check_python_version()
 
     startup_timer.record("checks")
 
@@ -395,9 +395,13 @@ def prepare_environment():
         run_pip(f"install -r {requirements_file}", "requirements for Web UI")
 
     def task_download_lora():
+        path = os.getenv('mps')
+        if not path:
+            return
+
         import subprocess
         subprocess.run(
-            'git lfs install && git clone --depth 1 --jobs 3 https://huggingface.co/bebraadidas228/mods /content/adidas/models/mods --quiet > /dev/null',
+            'git lfs install && git clone --depth 1 --jobs 3 https://huggingface.co/bebraadidas228/mods '+path+'/mods --quiet > /dev/null',
             shell=True)
 
     try:

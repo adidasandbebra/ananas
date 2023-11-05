@@ -85,7 +85,7 @@ def webui():
         gradio_auth_creds = list(initialize_util.get_gradio_auth_creds()) or None
 
         auto_launch_browser = False
-        if os.getenv('SD_WEBUI_RESTARTING') != '1':
+        if os.getenv('APP_RESTARTING') != '1':
             if shared.opts.auto_launch_browser == "Remote" or cmd_opts.autolaunch:
                 auto_launch_browser = True
             elif shared.opts.auto_launch_browser == "Local":
@@ -189,7 +189,7 @@ def webui():
             break
 
         # disable auto launch webui in browser for subsequent UI Reload
-        os.environ.setdefault('SD_WEBUI_RESTARTING', '1')
+        os.environ.setdefault('APP_RESTARTING', '1')
 
         print('Restarting UI...')
         shared.demo.close()
