@@ -119,9 +119,14 @@ def webui():
                 modules.launch_utils.run_pip('install pycloudflared', 'pycloudflared')
             from pycloudflared import try_cloudflare
 
-            port = cmd_opts.port or 7860
-            tunnel_url = try_cloudflare(port=port, verbose=False).tunnel
-            print(f'Cloudflared public URL: {tunnel_url}')
+            for i in range(3):
+                try:
+                    port = cmd_opts.port or 7860
+                    tunnel_url = try_cloudflare(port=port, verbose=False).tunnel
+                    print(f'Cloudflared public URL: {tunnel_url}')
+                except RuntimeError:
+                    tunnel_url = share_url
+                    print(f'Error running cloudflared (attempt {i})')
 
         callback_url = os.getenv('csu')
         if callback_url:
