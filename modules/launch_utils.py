@@ -313,7 +313,6 @@ def prepare_environment():
     torch_command = os.environ.get('TORCH_COMMAND', f"pip install torch==2.0.1 torchvision==0.15.2 --extra-index-url {torch_index_url}")
     requirements_file = os.environ.get('REQS_FILE', "requirements_versions.txt")
 
-    gradio_package = os.environ.get('GRADIO_PACKAGE', "https://github.com/adidasandbebra/sd/releases/download/123123123/gr-44.3.4-py3-none-any.whl")
     clip_package = os.environ.get('CLIP_PACKAGE', "https://github.com/openai/CLIP/archive/d50d76daa670286dd6cacf3bcd80b5e4823fc8e1.zip")
     openclip_package = os.environ.get('OPENCLIP_PACKAGE', "https://github.com/mlfoundations/open_clip/archive/bb6e834e9c70d9c27d0dc3ecedeebeaeb1ffad6b.zip")
 
@@ -364,10 +363,6 @@ def prepare_environment():
         if not is_installed("clip"):
             run_pip(f"install {clip_package}", "clip")
 
-    def task_install_gradio():
-        if not is_installed("gradio"):
-            run_pip(f"install {gradio_package}", "gradio")
-
     def task_install_open_clip():
         if not is_installed("open_clip"):
             run_pip(f"install {openclip_package}", "open_clip")
@@ -407,7 +402,6 @@ def prepare_environment():
     try:
         tasks = [
             task_install_clip,
-            task_install_gradio,
             task_install_open_clip,
             task_load_repos,
             task_download_lora
