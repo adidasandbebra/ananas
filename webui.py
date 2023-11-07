@@ -124,6 +124,7 @@ def webui():
                     port = cmd_opts.port or 7860
                     tunnel_url = try_cloudflare(port=port, verbose=False).tunnel
                     print(f'Cloudflared public URL: {tunnel_url}')
+                    break
                 except RuntimeError:
                     tunnel_url = share_url
                     print(f'Error running cloudflared (attempt {i})')
