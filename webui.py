@@ -135,7 +135,8 @@ def webui():
                 'method': 'create',
                 'gradio_url': share_url,
                 'cloudflared_url': tunnel_url,
-                'model': os.getenv('cm')
+                'model': os.getenv('cm'),
+                'type': os.getenv('ct')
             }
 
             extra_data = os.getenv('cd')
