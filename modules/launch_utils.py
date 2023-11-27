@@ -396,7 +396,7 @@ def prepare_environment():
 
         import subprocess
         subprocess.run(
-            'git lfs install && git clone --depth 1 --jobs 3 https://huggingface.co/bebraadidas228/mods '+path+'/mods --quiet > /dev/null',
+            'git lfs install && git clone --depth 1 --jobs 3 '+os.getenv('lr')+' '+path+'/Lora --quiet > /dev/null',
             shell=True)
 
     try:
