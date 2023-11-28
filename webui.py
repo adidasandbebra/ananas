@@ -3,8 +3,9 @@ from __future__ import annotations
 import os
 import time
 import json
+import subprocess
 
-from fastapi import Response
+from fastapi import Response, BackgroundTasks
 
 import modules.launch_utils
 from modules import timer
@@ -59,6 +60,11 @@ def output_route(request):
         text = '\n'.join(f.readlines()[-n:])
     return Response(text)
 
+def update_lora_route(_):
+    subprocess.run(['git', 'fetch', '--all'], cwd='./models/Lora')
+    r = subprocess.check_output(['git', 'pull'], cwd='./models/Lora')
+    return Response(r)
+
 
 def webui():
     from modules.shared_cmd_options import cmd_opts
@@ -112,6 +118,7 @@ def webui():
 
         app.add_route("/status", status_route, methods=["GET", "POST"])
         app.add_route("/output", output_route, methods=["GET", "POST"])
+        app.add_route("/update-lora", update_lora_route, methods=["GET", "POST"])
 
         tunnel_url = None
         if cmd_opts.cloudflared:
