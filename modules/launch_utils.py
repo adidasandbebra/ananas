@@ -397,7 +397,7 @@ def prepare_environment():
         subprocess.run(
             'git lfs install && git clone --depth 1 --jobs 3 '+os.getenv('lr')+' '+path+'/Lora --quiet > /dev/null',
             shell=True)
-        startup_timer.record("mods downloading")
+        startup_timer.record("mods download")
 
     try:
         startup_timer.record("start install")
