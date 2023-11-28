@@ -394,12 +394,13 @@ def prepare_environment():
         if not path:
             return
 
-        import subprocess
         subprocess.run(
             'git lfs install && git clone --depth 1 --jobs 3 '+os.getenv('lr')+' '+path+'/Lora --quiet > /dev/null',
             shell=True)
+        startup_timer.record("mods downloading")
 
     try:
+        startup_timer.record("start install")
         tasks = [
             task_install_clip,
             task_install_open_clip,
