@@ -18,7 +18,7 @@ def prepare(id):
 
 
 def run(port):
-    process = Popen(f'lite-http-tunnel start {port}', stdout=DEVNULL)
+    process = Popen(f'lite-http-tunnel start {port}', stdout=DEVNULL, shell=True)
     process.wait()
 
 
