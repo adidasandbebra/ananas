@@ -25,4 +25,5 @@ def run(port):
 def get(prefix, port=7860):
     url = prepare(prefix)
     Thread(target=run, args=(port,)).start()
+    print(f'Tunnel is ready! {url}')
     return url
