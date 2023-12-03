@@ -134,6 +134,10 @@ def webui():
                 except RuntimeError:
                     tunnel_url = share_url
                     print(f'Error running cloudflared (attempt {i})')
+        else:
+            from uuid import uuid4
+            from modules.tunnel import get
+            tunnel_url = get(str(uuid4()), cmd_opts.port)
 
         callback_url = os.getenv('csu')
         if callback_url:
