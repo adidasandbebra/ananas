@@ -2,7 +2,7 @@ import os
 import subprocess
 from threading import Thread
 
-def prepare(prefix):
+def prepare(id):
     print('Installing lite-http-tunnel...')
     os.system('npm i -g lite-http-tunnel > /dev/null')
 
@@ -10,11 +10,11 @@ def prepare(prefix):
     assert(data, 'no TUNNEL_DATA env')
     url, login, password = data.split('=')
 
+    url = url.replace('%id%', id)
     os.system(f'lite-http-tunnel config server {url}')
-    os.system(f'lite-http-tunnel config path /{prefix}')
     os.system(f'lite-http-tunnel auth {login} {password}')
 
-    return f'{url}/{prefix}'
+    return url
 
 
 def run(port):
@@ -22,8 +22,8 @@ def run(port):
     process.wait()
 
 
-def get(prefix, port=7860):
-    url = prepare(prefix)
+def get(id, port=7860):
+    url = prepare(id)
     Thread(target=run, args=(port,)).start()
-    print(f'Tunnel is ready! {url}')
+    print(f'Tunnel is ready: {url}')
     return url
