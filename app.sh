@@ -6,11 +6,11 @@
 
 export PYTORCH_CUDA_ALLOC_CONF=garbage_collection_threshold:0.9,max_split_size_mb:512
 export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
-export COMMANDLINE_ARGS="--xformers --cloudflared --no-hashing --enable-insecure-extension-access --no-half-vae --disable-safe-unpickle --disable-console-progressbars --ui-settings-file settings.json --skip-torch-cuda-test --opt-channelslast --upcast-sampling --opt-sdp-attention $@"
+export COMMANDLINE_ARGS="--xformers --share --no-hashing --enable-insecure-extension-access --no-half-vae --disable-safe-unpickle --disable-console-progressbars --ui-settings-file settings.json --skip-torch-cuda-test --opt-channelslast --upcast-sampling --opt-sdp-attention $@"
 export CUDA_MODULE_LOADING=LAZY
 
-if [ -z $DISABLE_GRADIO_TUNNEL ]; then
-  export COMMANDLINE_ARGS="--share $COMMANDLINE_ARGS"
+if [ -z $DISABLE_CLOUDFLARED_TUNNEL ]; then
+  export COMMANDLINE_ARGS="--cloudflared $COMMANDLINE_ARGS"
 fi
 
 TCMALLOC="$(PATH=/usr/sbin:$PATH ldconfig -p | grep -Po "libtcmalloc(_minimal|)\.so\.\d" | head -n 1)"
