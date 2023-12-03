@@ -35,7 +35,8 @@ def main():
 
     launch_utils.startup_timer.record("initial startup")
 
-    if os.getenv('test_123') == 1:
+    print(os.getenv('TEST123'))
+    if os.getenv('TEST123') == 'first':
         time.sleep(99999999999)
 
     with launch_utils.startup_timer.subcategory("prepare environment"):
@@ -45,7 +46,7 @@ def main():
     if args.test_server:
         configure_for_tests()
 
-    if os.getenv('test_123') == 2:
+    if os.getenv('TEST123') == 'second':
         time.sleep(99999999999)
 
     start()
