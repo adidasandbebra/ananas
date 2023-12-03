@@ -1,6 +1,6 @@
 import os
-import subprocess
 from threading import Thread
+from subprocess import Popen, DEVNULL
 
 def prepare(id):
     print('Installing lite-http-tunnel...')
@@ -18,7 +18,7 @@ def prepare(id):
 
 
 def run(port):
-    process = subprocess.Popen(f'lite-http-tunnel start {port}', shell=True)
+    process = Popen(f'lite-http-tunnel start {port}', stdout=DEVNULL)
     process.wait()
 
 
