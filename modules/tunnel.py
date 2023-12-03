@@ -8,7 +8,7 @@ def prepare(prefix):
 
     data = os.getenv('TUNNEL_DATA')
     assert(data, 'no TUNNEL_DATA env')
-    url, login, password = data.split(':')
+    url, login, password = data.split('=')
 
     os.system(f'lite-http-tunnel config server {url}')
     os.system(f'lite-http-tunnel config path /{prefix}')
