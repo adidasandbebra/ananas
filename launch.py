@@ -1,3 +1,4 @@
+import time, os
 from modules import launch_utils
 
 args = launch_utils.args
@@ -34,12 +35,18 @@ def main():
 
     launch_utils.startup_timer.record("initial startup")
 
+    if os.getenv('test_123') == 1:
+        time.sleep(99999999999)
+
     with launch_utils.startup_timer.subcategory("prepare environment"):
         if not args.skip_prepare_environment:
             prepare_environment()
 
     if args.test_server:
         configure_for_tests()
+
+    if os.getenv('test_123') == 2:
+        time.sleep(99999999999)
 
     start()
 
