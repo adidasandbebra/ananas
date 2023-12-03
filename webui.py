@@ -50,7 +50,7 @@ def api_only():
     )
 
 
-def status_route(request):
+def status_route(_):
     return Response("ok")
 
 
@@ -61,8 +61,7 @@ def output_route(request):
     return Response(text)
 
 def update_lora_route(_):
-    subprocess.run(['git', 'fetch', '--all'], cwd='./models/Lora')
-    r = subprocess.check_output(['git', 'pull'], cwd='./models/Lora')
+    r = subprocess.check_output(['git', 'pull', '--all'], cwd='./models/Lora')
     return Response(r)
 
 
