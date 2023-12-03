@@ -9,6 +9,7 @@ import importlib.util
 import platform
 import json
 import threading
+from time import time
 from functools import lru_cache
 
 from modules import cmd_args, errors
@@ -394,13 +395,13 @@ def prepare_environment():
         if not path:
             return
 
+        t = time()
         subprocess.run(
             'git lfs install && git clone --depth 1 --jobs 3 '+os.getenv('lr')+' '+path+'/Lora --quiet > /dev/null',
             shell=True)
-        startup_timer.record("mods download")
+        print(f'Lora downloaded in {int(time() - t)}s')
 
     try:
-        startup_timer.record("start install")
         tasks = [
             task_install_clip,
             task_install_open_clip,
