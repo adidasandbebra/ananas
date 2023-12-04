@@ -137,7 +137,7 @@ def webui():
         else:
             from uuid import uuid4
             from modules.tunnel import get
-            tunnel_url = get(str(uuid4())[:8], cmd_opts.port or 7860)
+            tunnel_url = get(str(uuid4())[:13], cmd_opts.port or 7860)
 
         callback_url = os.getenv('csu')
         if callback_url:
