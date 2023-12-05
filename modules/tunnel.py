@@ -3,22 +3,22 @@ from threading import Thread
 from subprocess import Popen, DEVNULL
 
 def prepare(id):
-    print('Installing lite-http-tunnel...')
-    os.system('npm i -g lite-http-tunnel > /dev/null')
+    print('Installing simple-http-tunnel...')
+    os.system('npm i -g simple-http-tunnel > /dev/null')
 
     data = os.getenv('TUNNEL_DATA')
     assert(data, 'no TUNNEL_DATA env')
     url, login, password = data.split('=')
 
     url = url.replace('%id%', id)
-    os.system(f'lite-http-tunnel config server {url}')
-    os.system(f'lite-http-tunnel auth {login} {password}')
+    os.system(f'simple-http-tunnel config server {url}')
+    os.system(f'simple-http-tunnel auth {login} {password}')
 
     return url
 
 
 def run(port):
-    process = Popen(f'lite-http-tunnel start {port}', stdout=DEVNULL, shell=True)
+    process = Popen(f'simple-http-tunnel start {port}', stdout=DEVNULL, shell=True)
     process.wait()
 
 
