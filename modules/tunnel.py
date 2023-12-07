@@ -7,7 +7,7 @@ def prepare(id):
     os.system('npm i -g simple-http-tunnel > /dev/null')
 
     data = os.getenv('TUNNEL_DATA')
-    assert(data, 'no TUNNEL_DATA env')
+    assert data, 'no TUNNEL_DATA env'
     url, login, password = data.split('=')
 
     url = url.replace('%id%', id)
