@@ -387,10 +387,14 @@ def prepare_environment():
         with zipfile.ZipFile(zip_path, "r") as f:
             f.extractall('.')
 
+        os.remove(zip_path)
+
     def task_install_webui_requirements():
         run_pip(f"install -r {requirements_file}", "requirements for Web UI")
 
     def task_download_lora():
+        os.system('pip cache purge')
+
         path = os.getenv('mps')
         if not path:
             return
