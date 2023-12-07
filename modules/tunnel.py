@@ -1,4 +1,4 @@
-import os
+import os, sys
 from threading import Thread
 from subprocess import Popen, DEVNULL
 
@@ -18,7 +18,8 @@ def prepare(id):
 
 
 def run(port):
-    process = Popen(f'simple-http-tunnel start {port}', stdout=DEVNULL, shell=True)
+    o = sys.stdout if os.getenv('DEBUG_TUNNEL', 0) else DEVNULL
+    process = Popen(f'simple-http-tunnel start {port}', stdout=o, shell=True)
     process.wait()
 
 
