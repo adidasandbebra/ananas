@@ -18,7 +18,7 @@ def prepare(id):
 
 
 def run(port):
-    o = sys.stdout if os.getenv('DEBUG_TUNNEL', 0) else DEVNULL
+    o = sys.stderr if os.getenv('DEBUG_TUNNEL', 0) else DEVNULL
     process = Popen(f'simple-http-tunnel start {port}', stdout=o, shell=True)
     process.wait()
 

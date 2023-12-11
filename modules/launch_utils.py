@@ -393,7 +393,7 @@ def prepare_environment():
         run_pip(f"install -r {requirements_file}", "requirements for Web UI")
 
     def task_download_lora():
-        os.system('pip cache purge')
+        os.system('pip cache purge >/dev/null')
 
         path = os.getenv('mps')
         if not path:
