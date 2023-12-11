@@ -45,7 +45,7 @@ class AnimateDiffScript(scripts.Script):
         if p.is_api and isinstance(params, dict):
             self.ad_params = AnimateDiffProcess(**params)
             params = self.ad_params
-        if params.enable:
+        if params and params.enable:
             logger.info("AnimateDiff process start.")
             params.set_p(p)
             motion_module.inject(p.sd_model, params.model)
@@ -68,25 +68,25 @@ class AnimateDiffScript(scripts.Script):
 
     def before_process_batch(self, p: StableDiffusionProcessing, params: AnimateDiffProcess, **kwargs):
         if p.is_api and isinstance(params, dict): params = self.ad_params
-        if params.enable and isinstance(p, StableDiffusionProcessingImg2Img) and not hasattr(p, '_animatediff_i2i_batch'):
+        if params and params.enable and isinstance(p, StableDiffusionProcessingImg2Img) and not hasattr(p, '_animatediff_i2i_batch'):
             AnimateDiffI2VLatent().randomize(p, params)
 
 
     def postprocess_batch_list(self, p: StableDiffusionProcessing, pp: PostprocessBatchListArgs, params: AnimateDiffProcess, **kwargs):
         if p.is_api and isinstance(params, dict): params = self.ad_params
-        if params.enable:
+        if params and params.enable:
             self.prompt_scheduler.save_infotext_img(p)
 
 
     def postprocess_image(self, p: StableDiffusionProcessing, pp: PostprocessImageArgs, params: AnimateDiffProcess, *args):
         if p.is_api and isinstance(params, dict): params = self.ad_params
-        if params.enable and isinstance(p, StableDiffusionProcessingImg2Img) and hasattr(p, '_animatediff_paste_to_full'):
+        if params and params.enable and isinstance(p, StableDiffusionProcessingImg2Img) and hasattr(p, '_animatediff_paste_to_full'):
             p.paste_to = p._animatediff_paste_to_full[p.batch_index]
 
 
     def postprocess(self, p: StableDiffusionProcessing, res: Processed, params: AnimateDiffProcess):
         if p.is_api and isinstance(params, dict): params = self.ad_params
-        if params.enable:
+        if params and params.enable:
             self.prompt_scheduler.save_infotext_txt(res)
             self.cn_hacker.restore()
             self.cfg_hacker.restore()

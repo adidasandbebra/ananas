@@ -295,7 +295,7 @@ class AnimateDiffI2IBatch:
 
 
     def cap_init_image(self, p: StableDiffusionProcessingImg2Img, params):
-        if params.enable and isinstance(p, StableDiffusionProcessingImg2Img) and hasattr(p, '_animatediff_i2i_batch'):
+        if params and params.enable and isinstance(p, StableDiffusionProcessingImg2Img) and hasattr(p, '_animatediff_i2i_batch'):
             if len(p.init_images) > params.video_length:
                 p.init_images = p.init_images[:params.video_length]
                 if p.image_mask and isinstance(p.image_mask, list) and len(p.image_mask) > params.video_length:
