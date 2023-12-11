@@ -585,16 +585,3 @@ class Script(scripts.Script):
 
         import gc; gc.collect()
         devices.torch_gc()
-
-        try:
-            import os
-            import psutil
-            mem = psutil.Process(os.getpid()).memory_info()
-            print(f'[Mem] rss: {mem.rss/2**30:.3f} GB, vms: {mem.vms/2**30:.3f} GB')
-            from modules.shared import mem_mon as vram_mon
-            from modules.memmon import MemUsageMonitor
-            vram_mon: MemUsageMonitor
-            free, total = vram_mon.cuda_mem_get_info()
-            print(f'[VRAM] free: {free/2**30:.3f} GB, total: {total/2**30:.3f} GB')
-        except:
-            pass

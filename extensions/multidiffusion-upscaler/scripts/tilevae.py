@@ -269,11 +269,11 @@ def perfcount(fn):
 
         devices.torch_gc()
         gc.collect()
-        if torch.cuda.is_available():
-            vram = torch.cuda.max_memory_allocated(devices.device) / 2**20
-            print(f'[Tiled VAE]: Done in {time() - ts:.3f}s, max VRAM alloc {vram:.3f} MB')
-        else:
-            print(f'[Tiled VAE]: Done in {time() - ts:.3f}s')
+        # if torch.cuda.is_available():
+        #     vram = torch.cuda.max_memory_allocated(devices.device) / 2**20
+        #     print(f'[Tiled VAE]: Done in {time() - ts:.3f}s, max VRAM alloc {vram:.3f} MB')
+        # else:
+        #     print(f'[Tiled VAE]: Done in {time() - ts:.3f}s')
 
         return ret
     return wrapper
@@ -420,8 +420,8 @@ class VAEHook:
         real_tile_height = self.get_best_tile_size(real_tile_height, tile_size)
         real_tile_width = self.get_best_tile_size(real_tile_width, tile_size)
 
-        print(f'[Tiled VAE]: split to {num_height_tiles}x{num_width_tiles} = {num_height_tiles*num_width_tiles} tiles. ' +
-              f'Optimal tile size {real_tile_width}x{real_tile_height}, original tile size {tile_size}x{tile_size}')
+        # print(f'[Tiled VAE]: split to {num_height_tiles}x{num_width_tiles} = {num_height_tiles*num_width_tiles} tiles. ' +
+        #       f'Optimal tile size {real_tile_width}x{real_tile_height}, original tile size {tile_size}x{tile_size}')
 
         for i in range(num_height_tiles):
             for j in range(num_width_tiles):
@@ -518,7 +518,7 @@ class VAEHook:
         net.last_z_shape = z.shape
 
         # Split the input into tiles and build a task queue for each tile
-        print(f'[Tiled VAE]: input_size: {z.shape}, tile_size: {tile_size}, padding: {self.pad}')
+        # print(f'[Tiled VAE]: input_size: {z.shape}, tile_size: {tile_size}, padding: {self.pad}')
 
         in_bboxes, out_bboxes = self.split_tiles(height, width)
 
@@ -540,7 +540,7 @@ class VAEHook:
             z = z.to(device)
             downsampled_z = F.interpolate(z, scale_factor=scale_factor, mode='nearest-exact')
             # use nearest-exact to keep statictics as close as possible
-            print(f'[Tiled VAE]: Fast mode enabled, estimating group norm parameters on {downsampled_z.shape[3]} x {downsampled_z.shape[2]} image')
+            # print(f'[Tiled VAE]: Fast mode enabled, estimating group norm parameters on {downsampled_z.shape[3]} x {downsampled_z.shape[2]} image')
 
             # ======= Special thanks to @Kahsolt for distribution shift issue ======= #
             # The downsampling will heavily distort its mean and std, so we need to recover it.
